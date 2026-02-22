@@ -1,10 +1,8 @@
 const { Queue } = require("bullmq");
+const redis = require("./redis");
 
 const jobQueue = new Queue("jobQueue", {
-  connection: {
-    host: process.env.REDIS_HOST,
-    port: 6379,
-  },
+  connection: redis,
 });
 
 module.exports = jobQueue;
