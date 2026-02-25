@@ -6,7 +6,7 @@ const app = express();
 app.use(express.json());
 
 app.get("/health", (req, res) => {
-  res.json({ status: "OK" });
+  res.json({ status: "All Set Boss" });
 });
 
 app.post("/jobs", async (req, res) => {
@@ -24,11 +24,23 @@ app.post("/jobs", async (req, res) => {
 
     const job = result.rows[0];
 
-    await jobQueue.add("processJob", {
-      jobId: job.id,
-      type,
-      payload,
-    });
+    await jobQueue.add(
+      "processJob",
+      {
+        jobId: job.id,
+        type,
+        payload,
+      },
+      {
+        attempts: 3,
+        backoff: {
+          type: "exponential",
+          delay: 2000,
+        },
+        removeOnFail: false,
+        removeOnComplete: true,
+      },
+    );
 
     res.status(201).json(job);
   } catch (error) {
