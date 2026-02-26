@@ -1,10 +1,12 @@
 const express = require("express");
 const pool = require("./config/db");
 const jobQueue = require("./config/queue");
+const setupBullBoard = require("./config/bullBoard");
 
 const app = express();
 app.use(express.json());
 
+setupBullBoard(app, jobQueue);
 app.get("/health", (req, res) => {
   res.json({ status: "All Set Boss" });
 });
@@ -39,6 +41,7 @@ app.post("/jobs", async (req, res) => {
         },
         removeOnFail: false,
         removeOnComplete: true,
+        delay: 10000,
       },
     );
 
