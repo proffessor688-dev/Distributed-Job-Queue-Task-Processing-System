@@ -1,6 +1,6 @@
 const { Worker } = require("bullmq");
 const pool = require("./config/db");
-const redis = require("./config/redis")
+const redis = require("./config/redis");
 
 const worker = new Worker(
   "jobQueue",
